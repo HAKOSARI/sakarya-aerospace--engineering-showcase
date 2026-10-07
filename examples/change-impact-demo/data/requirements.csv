@@ -1,0 +1,4 @@
+req_id,title,dependencies,evidence_config
+DEMO-REQ-001,Average navigation processing latency shall be <= 20 ms,NAV_MESSAGE_RATE;MISSION_COMPUTER_SW,CFG-A
+DEMO-REQ-002,GNSS position shall be displayed to the operator,GNSS_INTERFACE;GCS_DISPLAY,CFG-B
+DEMO-REQ-003,Power input shall remain within the declared range,PDU_OUTPUT;MISSION_COMPUTER_POWER,CFG-B

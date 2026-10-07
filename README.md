@@ -2,6 +2,11 @@
 
 Public engineering showcase for **Sakarya Aerospace / SUHAVX**.
 
+[![Showcase CI](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/showcase-ci.yml/badge.svg)](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/showcase-ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+**Open engineering • Reproducible evidence • Human-reviewed decisions**
+
 We are exploring verification intelligence for complex aerospace and unmanned-system integration: how requirements, interfaces, changes, verification activities, evidence, and engineering decisions remain traceable to one another.
 
 > **Core question:** When something changes in a system, what must be verified again — and what existing evidence can still be trusted?
@@ -28,6 +33,41 @@ and
 **Engineering Decision → Result → Evidence → Verification Case → Environment → Method → Requirement → Mission Need**
 
 Missing links are engineering information, too: a requirement without a verification case, evidence tied to an obsolete configuration, or a changed interface whose dependent requirements have not been reconsidered.
+
+## Explore the showcase
+
+| Area | What it demonstrates |
+|---|---|
+| [Verification Intelligence](docs/verification-intelligence.md) | Requirement → method → environment → evidence → decision reasoning |
+| [Bidirectional Traceability](docs/traceability-demo.md) | Walking a verification claim forward and backward |
+| [Interface Change Impact](docs/interface-change-impact.md) | Why a seemingly small subsystem/interface change can invalidate evidence |
+| [Evidence Applicability](docs/evidence-applicability.md) | Provenance, configuration and evidence-reuse reasoning |
+| [Mission Computer Latency](examples/mission-computer-latency.md) | Why a quantitative timing requirement needs a precise verification definition |
+| [Executable Change-Impact Demo](examples/change-impact-demo/README.md) | Synthetic REUSE / REVIEW / REVERIFY demonstrator with tests |
+| [Human Review Gate](docs/human-review-gate.md) | Why automated PASS evidence is not the same as engineering approval |
+
+### Showcase architecture
+
+```mermaid
+flowchart LR
+    N[Mission / Stakeholder Need] --> R[Requirement]
+    R --> I[Interfaces & Dependencies]
+    I --> C[Change]
+    C --> X[Impact Analysis]
+    X --> M[Verification Method]
+    M --> V[Verification Case / Environment]
+    V --> E[Evidence]
+    E --> D[Engineering Decision]
+    D -->|trace back| R
+```
+
+The executable demo is intentionally small enough to audit by eye. The goal is not to hide engineering judgment behind software; it is to make the reasoning chain visible, reviewable and reproducible.
+
+## Open-source collaboration
+
+This public showcase is licensed under the **Apache License 2.0**. External contributors are welcome to fork the repository, develop changes on their own branches, and propose them back through Pull Requests.
+
+A public contribution never receives automatic access to the private Sakarya Aerospace verification laboratory. Public-to-private transfer is a separate, deliberate engineering decision.
 
 ## Public demo philosophy
 
