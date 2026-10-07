@@ -2,6 +2,11 @@
 
 Public engineering showcase for **Sakarya Aerospace / SUHAVX**.
 
+[![Showcase CI](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/showcase-ci.yml/badge.svg)](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/showcase-ci.yml)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+**Open engineering • Reproducible evidence • Human-reviewed decisions**
+
 We are exploring verification intelligence for complex aerospace and unmanned-system integration: how requirements, interfaces, changes, verification activities, evidence, and engineering decisions remain traceable to one another.
 
 > **Core question:** When something changes in a system, what must be verified again — and what existing evidence can still be trusted?
