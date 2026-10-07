@@ -57,6 +57,12 @@ flowchart LR
 
 The executable demo is intentionally small enough to audit by eye. The goal is not to hide engineering judgment behind software; it is to make the reasoning chain visible, reviewable and reproducible.
 
+## Open-source collaboration
+
+This public showcase is licensed under the **Apache License 2.0**. External contributors are welcome to fork the repository, develop changes on their own branches, and propose them back through Pull Requests.
+
+A public contribution never receives automatic access to the private Sakarya Aerospace verification laboratory. Public-to-private transfer is a separate, deliberate engineering decision.
+
 ## Public demo philosophy
 
 Examples in this repository are intentionally simplified and use synthetic data. They demonstrate engineering reasoning and workflow design.
