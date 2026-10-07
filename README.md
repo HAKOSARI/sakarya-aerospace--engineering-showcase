@@ -44,6 +44,7 @@ Missing links are engineering information, too: a requirement without a verifica
 | [Evidence Applicability](docs/evidence-applicability.md) | Provenance, configuration and evidence-reuse reasoning |
 | [Mission Computer Latency](examples/mission-computer-latency.md) | Why a quantitative timing requirement needs a precise verification definition |
 | [Executable Change-Impact Demo](examples/change-impact-demo/README.md) | Synthetic REUSE / REVIEW / REVERIFY demonstrator with tests |
+| [Human Review Gate](docs/human-review-gate.md) | Why automated PASS evidence is not the same as engineering approval |
 
 ### Showcase architecture
 
