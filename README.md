@@ -29,6 +29,34 @@ and
 
 Missing links are engineering information, too: a requirement without a verification case, evidence tied to an obsolete configuration, or a changed interface whose dependent requirements have not been reconsidered.
 
+## Explore the showcase
+
+| Area | What it demonstrates |
+|---|---|
+| [Verification Intelligence](docs/verification-intelligence.md) | Requirement → method → environment → evidence → decision reasoning |
+| [Bidirectional Traceability](docs/traceability-demo.md) | Walking a verification claim forward and backward |
+| [Interface Change Impact](docs/interface-change-impact.md) | Why a seemingly small subsystem/interface change can invalidate evidence |
+| [Evidence Applicability](docs/evidence-applicability.md) | Provenance, configuration and evidence-reuse reasoning |
+| [Mission Computer Latency](examples/mission-computer-latency.md) | Why a quantitative timing requirement needs a precise verification definition |
+| [Executable Change-Impact Demo](examples/change-impact-demo/README.md) | Synthetic REUSE / REVIEW / REVERIFY demonstrator with tests |
+
+### Showcase architecture
+
+```mermaid
+flowchart LR
+    N[Mission / Stakeholder Need] --> R[Requirement]
+    R --> I[Interfaces & Dependencies]
+    I --> C[Change]
+    C --> X[Impact Analysis]
+    X --> M[Verification Method]
+    M --> V[Verification Case / Environment]
+    V --> E[Evidence]
+    E --> D[Engineering Decision]
+    D -->|trace back| R
+```
+
+The executable demo is intentionally small enough to audit by eye. The goal is not to hide engineering judgment behind software; it is to make the reasoning chain visible, reviewable and reproducible.
+
 ## Public demo philosophy
 
 Examples in this repository are intentionally simplified and use synthetic data. They demonstrate engineering reasoning and workflow design.
