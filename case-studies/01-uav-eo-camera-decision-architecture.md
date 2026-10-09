@@ -18,13 +18,13 @@ flowchart TD
     E -->|"Affected claim / invalid evidence"| V["REVERIFY"]
     R --> H["Human engineering review"]
     W --> H
-    V --> H
+    V --> P["Plan affected verification activities"]
+    P --> T["Execute affected tests<br/>(synthetic demonstration)"]
+    T --> X["Evaluate results, anomalies<br/>and evidence validity"]
+    X --> H
     H -.->|"Override / reclassify with rationale"| E
-    H -->|"Approved disposition"| J["Document decision and rationale"]
-    J --> L{"New verification required?"}
-    L -->|Yes| T["Re-run affected tests<br/>(synthetic demonstration)"]
-    T --> S[("Updated trace links<br/>and evidence status")]
-    L -->|No| S
+    H -->|"Authorized decision"| J["Document decision and rationale"]
+    J --> S[("Updated trace links<br/>and evidence status")]
     S -.->|"New change or newly found dependency"| C
     N["SYNTHETIC CASE<br/>NO REAL FLIGHT DATA"] -.-> A
 
@@ -36,7 +36,7 @@ flowchart TD
     class V reverify;
 ```
 
-**How to read the decision:** A dependency change affecting a verification claim is a REVERIFY candidate. If configuration, test coverage, provenance or interface semantics cannot be established, use REVIEW as the conservative default. REUSE is a *candidate* only when applicability is positively justified; a missing dependency link is not proof of independence. The human reviewer can override any provisional label, with a recorded reason. A REVERIFY disposition does not itself constitute new evidence: tests must be executed and evaluated. The resulting status and trace links are updated before any future reuse decision.
+**How to read the decision:** A dependency change affecting a verification claim is a REVERIFY candidate. If configuration, test coverage, provenance or interface semantics cannot be established, use REVIEW as the conservative default. REUSE is a *candidate* only when applicability is positively justified; a missing dependency link is not proof of independence. The human reviewer can override any provisional label, with a recorded reason. A REVERIFY disposition does not itself constitute new evidence: verification must be planned, tests executed, results and anomalies evaluated, and the outcome reviewed. An executed test can fail or yield inconclusive evidence; neither outcome constitutes a verified requirement. The resulting status and trace links are updated before any future reuse decision.
 
 **Diagram limitation:** The loop is a conceptual process model. The public executable demonstration uses simplified rules and does not implement human authorization, test execution, the full evidence schema, or every arrow shown here.
 
@@ -89,9 +89,10 @@ flowchart LR
 2. **Trace:** `EO-REQ-001` (decode throughput), `EO-REQ-002` (end-to-end latency) and `EO-REQ-005` (time alignment) depend on those changed attributes.
 3. **Link evidence:** existing CAM-A H.264 throughput and latency results are tied to the old camera/decoder configuration. They cannot by themselves establish CAM-B compliance.
 4. **Provisional disposition:** REVERIFY the three affected claims. For unrelated requirements, first check independence, evidence provenance and baseline applicability; then consider REUSE. Unknown fault-indication semantics route to REVIEW until resolved.
-5. **Human gate:** authorized engineering reviewers may adjust classifications and must record their reasoning.
-6. **Reverification:** run *planned* synthetic/illustrative tests or actual program-approved tests in a real project; capture the tested configuration, data and anomalies. **No test execution is claimed in this document.**
-7. **Update:** revise the VCRM, evidence links and decision log; unresolved findings remain open.
+5. **Reverification plan:** for REVERIFY candidates define method, environment, procedure, acceptance criteria, sample coverage, uncertainty, roles and test readiness.
+6. **Execution and evidence evaluation:** execute only the planned synthetic/illustrative tests (or program-approved tests in a real project); examine raw data, failures, anomalies, missing frames and configuration identity. A failed or inconclusive test remains unresolved. **No test execution is claimed in this document.**
+7. **Human gate:** authorized engineering reviewers may adjust classifications and must record their reasoning.
+8. **Update:** revise the VCRM, evidence links and decision log; unresolved findings remain open.
 
 ## Relation to the executable Change-Impact Demo
 
