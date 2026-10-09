@@ -8,37 +8,50 @@ This companion to [UAV EO Camera Interface Change](01-uav-eo-camera-interface-ch
 
 ```mermaid
 flowchart TD
-    A["Synthetic UAV camera interface change"] --> B["Identify changed interface attributes<br/>schema · rate · timing · protocol version"]
+    A["Synthetic UAV Camera Interface Change<br/>NO REAL FLIGHT DATA"] --> B["Identify changed interfaces<br/>schema / rate / timing / protocol"]
     B --> C["Trace affected requirements"]
-    C --> D["Link verification cases and existing evidence"]
-    D --> E{"Evidence still applicable<br/>to the new baseline?"}
-    K["Decision inputs:<br/>change type and dependency<br/>old vs new configuration<br/>evidence version, date, provenance<br/>coverage and validity"] -.-> E
-    E -->|"Demonstrably applicable"| R["REUSE candidate"]
-    E -->|"Uncertain / missing information"| W["REVIEW (conservative default)"]
-    E -->|"Affected claim / invalid evidence"| V["REVERIFY"]
+    C --> D["Link verification cases and evidence"]
+    D --> E{"Evidence applicability<br/>to the new baseline?"}
+    K["Decision criteria<br/>interface delta and dependencies<br/>old vs new configuration<br/>evidence revision, date and provenance<br/>coverage and acceptance criteria"] -.-> E
+
+    subgraph DISPOSITION["Provisional engineering disposition"]
+      direction LR
+      R["REUSE candidate"]
+      W["REVIEW"]
+      V["REVERIFY"]
+    end
+
+    E -->|"Applicable with justification"| R
+    E -->|"Uncertain → conservative default"| W
+    E -->|"Affected / not applicable"| V
+
     R --> H["Human engineering review"]
     W --> H
-    V --> P["Plan affected verification activities"]
-    P --> T["Execute affected tests<br/>(synthetic demonstration)"]
-    T --> X["Evaluate results, anomalies<br/>and evidence validity"]
-    X --> H
-    H -.->|"Override / reclassify with rationale"| E
-    H -->|"Authorized decision"| J["Document decision and rationale"]
-    J --> S[("Updated trace links<br/>and evidence status")]
-    S -.->|"New change or newly found dependency"| C
-    N["SYNTHETIC CASE<br/>NO REAL FLIGHT DATA"] -.-> A
+    V --> P["Plan affected verification"]
+    P --> T["Execute affected tests<br/>(synthetic example)"]
+    T --> X{"Evaluate new evidence"}
+    X -->|"Valid result and sufficient coverage"| H
+    X -->|"Failed / inconclusive / anomaly"| F["Open nonconformance or evidence gap<br/>assess design, requirement or test plan"]
+    F --> H
+
+    H -.->|"Reclassify (human override)<br/>record rationale"| E
+    H -->|"Authorized disposition"| J["Document decision, rationale<br/>and unresolved actions"]
+    J --> S[("Updated evidence status<br/>and traceability links")]
+    S -.->|"New change or discovered dependency"| C
 
     classDef reuse fill:#e4f5e9,stroke:#237a43,color:#153f26;
     classDef review fill:#fff3cd,stroke:#aa7900,color:#5a4000;
     classDef reverify fill:#fde5e5,stroke:#b3262e,color:#65171b;
+    classDef warning fill:#fff0e6,stroke:#b35a19,color:#66310e;
     class R reuse;
     class W review;
     class V reverify;
+    class F warning;
 ```
 
 **How to read the decision:** A dependency change affecting a verification claim is a REVERIFY candidate. If configuration, test coverage, provenance or interface semantics cannot be established, use REVIEW as the conservative default. REUSE is a *candidate* only when applicability is positively justified; a missing dependency link is not proof of independence. The human reviewer can override any provisional label, with a recorded reason. A REVERIFY disposition does not itself constitute new evidence: verification must be planned, tests executed, results and anomalies evaluated, and the outcome reviewed. An executed test can fail or yield inconclusive evidence; neither outcome constitutes a verified requirement. The resulting status and trace links are updated before any future reuse decision.
 
-**Diagram limitation:** The loop is a conceptual process model. The public executable demonstration uses simplified rules and does not implement human authorization, test execution, the full evidence schema, or every arrow shown here.
+**Negative-evidence rule:** A failed test or an inconclusive result is not a verified PASS. It generates an open nonconformance, anomaly or evidence gap for authorized engineering review. The reviewer may request design correction, revised requirements, a better test procedure or further testing. Recording a disposition does not mean the underlying requirement has been accepted; unresolved issues remain explicitly open in the evidence register.\n\n**Layout note:** The three provisional disposition labels share one Mermaid subgraph. Mermaid's automatic renderer can still vary by platform and viewport; source grouping is not a guarantee of identical pixel alignment.\n\n**Diagram limitation:** The loop is a conceptual process model. The public executable demonstration uses simplified rules and does not implement human authorization, test execution, the full evidence schema, or every arrow shown here.
 
 ## Figure 2 — Multi-subsystem interface propagation
 
