@@ -3,7 +3,7 @@
 
 > **Status:** Public educational case study; synthetic system and synthetic numbers only. **Not** a design approval, flightworthiness statement, certification package, actual flight test, or evidence that Sakarya Aerospace has built this system. All thresholds and results are invented for teaching and must not be reused as product specifications.
 
-**Audience:** Systems, avionics, embedded, software, integration, verification and configuration engineers.  
+**Companion diagrams:** [Evidence decision loop and multi-subsystem interface propagation](01-uav-eo-camera-decision-architecture.md). The companion explains the REUSE / REVIEW / REVERIFY review loop and links this case to the [existing executable Change-Impact Demo](../examples/change-impact-demo/README.md), without claiming that the demo implements the richer camera scenario.\n\n**Audience:** Systems, avionics, embedded, software, integration, verification and configuration engineers.  
 **Question:** A camera appears pin-compatible and streams video. Which system claims must be reassessed before its replacement can be accepted?
 
 ## 1. System context and boundary
