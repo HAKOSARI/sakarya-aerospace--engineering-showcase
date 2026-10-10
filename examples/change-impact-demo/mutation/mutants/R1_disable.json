@@ -1,0 +1,10 @@
+{
+  "id": "R1_disable",
+  "rule": "R1",
+  "file": "src/camera_evidence.py",
+  "old": "if e.result != \"PASS\":",
+  "new": "if False and e.result != \"PASS\":",
+  "desc": "Disable failed evidence rule",
+  "expected": "KILLED",
+  "rationale": "Core non-equivalent behavior mutation; test suite should reject it."
+}
