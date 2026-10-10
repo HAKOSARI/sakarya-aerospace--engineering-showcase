@@ -1,0 +1,10 @@
+{
+  "id": "R3_unsafe_reuse",
+  "rule": "R3",
+  "file": "src/camera_evidence.py",
+  "old": "outcome, rule, why = \"REVERIFY\", \"R3\",",
+  "new": "outcome, rule, why = \"REUSE\", \"R3\",",
+  "desc": "Return unsafe REUSE for an interface/configuration mismatch",
+  "expected": "KILLED",
+  "rationale": "Core non-equivalent behavior mutation; test suite should reject it."
+}

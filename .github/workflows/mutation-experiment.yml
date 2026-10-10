@@ -1,0 +1,43 @@
+name: Mutation experiment (non-blocking)
+
+on:
+  pull_request:
+    paths:
+      - "examples/change-impact-demo/mutation/**"
+      - "examples/change-impact-demo/src/**"
+      - "examples/change-impact-demo/tests/**"
+      - ".github/workflows/mutation-experiment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mutation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned pytest
+        run: python -m pip install pytest==8.3.5
+      - name: Run mutation experiment
+        shell: bash
+        run: |
+          set -o pipefail
+          python examples/change-impact-demo/mutation/run_mutations.py \
+            --output mutation-results.json | tee mutation-console.log
+      - name: Upload raw results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-results-raw
+          path: |
+            mutation-results.json
+            mutation-console.log
+          if-no-files-found: warn
+          retention-days: 30
