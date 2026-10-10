@@ -42,3 +42,27 @@ For `DEMO-CHG-001`:
 - `DEMO-REQ-003` → **REUSE** candidate for the same limited synthetic rule set.
 
 This output is educational engineering workflow evidence only. It is not a certification, qualification or airworthiness determination.
+
+## Synthetic EO camera evidence engine (PR #2)
+
+**Implemented in code (not yet CI-verified):** `src/camera_evidence.py` provides provisional per-requirement recommendations; `data/generate_camera_cases.py` generates a deterministic, explicitly synthetic JSON dataset using seed `20261010`; `tests/test_camera_evidence.py` contains pytest tests. The original `src/change_impact.py` remains unchanged.
+
+| Rule | Implemented decision | Status |
+|---|---|---|
+| R1 | FAIL or INCONCLUSIVE evidence → REVIEW, open investigation | Implemented; tests added |
+| R2 | Changed traced dependency → REVERIFY | Implemented; tests added |
+| R3 | Known interface or configuration mismatch → REVERIFY | Implemented; tests added |
+| R4 | Missing evidence ID, test ID, interface version, config hash or date → REVIEW | Implemented; tests added |
+| R5 | Stale or future evidence date → REVIEW | Implemented; tests added |
+| R6 | PASS, matching baseline, no traced change → REUSE candidate | Implemented; tests added |
+
+The 365-day evidence-age window is an **invented educational policy**, not an aviation standard. The `human_approval` flag is recorded but is **not** an authorized sign-off: the advisory engine **never accepts** a requirement. It does not execute engineering tests, validate provenance signatures, verify a real configuration hash, manage anomalies, or grant airworthiness approval.
+
+Run locally from `examples/change-impact-demo`:
+
+```bash
+python data/generate_camera_cases.py
+python -m pytest -q tests/test_camera_evidence.py
+```
+
+The resulting `data/camera_cases.synthetic.json` is generated data. **Passing pytest means only that synthetic software assertions passed; it does not replace any real test campaign, flight testing, qualification, or certification.** Test execution and CI results have not yet been independently verified in this PR.
