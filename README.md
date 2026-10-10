@@ -16,6 +16,8 @@ python data/generate_camera_cases.py
 python -m pytest -q tests/test_camera_evidence.py tests/test_scope_evidence.py
 ```
 
+**Community standards:** [Code of Conduct](CODE_OF_CONDUCT.md) · [Contribution guide](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Discussion governance](docs/community-governance.md) · [Public metrics](docs/public-metrics.md).
+
 **First contribution in 30 minutes:** Read [CONTRIBUTING.md](CONTRIBUTING.md), choose a [good first issue](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), and open a small PR with a reproducible change. Start with a documentation clarification or an additional synthetic test.
 
 **Current public baseline:** R1–R7 synthetic EO-camera advisory rules, 34 camera tests, 3 showcase tests and 11 selected mutation checks were verified for [PR #12](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/pull/12) before merge. This is **software verification of invented cases**, not aircraft certification, airworthiness, HIL/flight-test evidence, customer evidence, or engineering acceptance. The browser demo is an educational reimplementation; the Python module is the reference behavior.
