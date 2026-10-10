@@ -1,0 +1,32 @@
+{
+  "id": "TC-01",
+  "overhead_fraction": 0.1,
+  "producer": {
+    "format": "GRAY8",
+    "transport": "GIGE",
+    "frame_rate_fps": 15,
+    "frame_size_bytes": 40000
+  },
+  "consumer": {
+    "accepted_formats": [
+      "GRAY8"
+    ],
+    "transport": "GIGE",
+    "capacity_mbps": 800,
+    "processing_rate_fps": 20,
+    "buffer_frames": 3,
+    "buffer_policy": "DROP_OLDEST",
+    "drop_tolerance_pct": 5,
+    "max_latency_ms": 150,
+    "latency_components": [
+      {
+        "worst_ms": 10,
+        "source": "MEASURED"
+      },
+      {
+        "worst_ms": 30,
+        "source": "MEASURED"
+      }
+    ]
+  }
+}
