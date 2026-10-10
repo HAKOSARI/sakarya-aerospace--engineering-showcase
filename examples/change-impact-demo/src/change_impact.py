@@ -77,7 +77,7 @@ def load_requirements(path: Path) -> list[Requirement]:
             Requirement(
                 req_id=row["req_id"],
                 title=row["title"],
-                dependencies=frozenset(filter(None, row["dependencies"].split(";"))),
+                dependencies=frozenset(item.strip() for item in row["dependencies"].split(";") if item.strip()),
                 evidence_config=row["evidence_config"],
             )
             for row in rows
@@ -89,7 +89,7 @@ def load_change(path: Path) -> Change:
         row = next(csv.DictReader(handle))
     return Change(
         change_id=row["change_id"],
-        changed_items=frozenset(filter(None, row["changed_items"].split(";"))),
+        changed_items=frozenset(item.strip() for item in row["changed_items"].split(";") if item.strip()),
         new_config=row["new_config"],
     )
 
