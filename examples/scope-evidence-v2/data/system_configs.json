@@ -1,0 +1,24 @@
+{
+  "system_configs": [
+    {
+      "config_id": "CFG-01",
+      "system_scope": ["EO_CAMERA"],
+      "notes": "Single-sensor configuration. Scope matches EO-only evidence."
+    },
+    {
+      "config_id": "CFG-02",
+      "system_scope": ["EO_CAMERA", "IR_CAMERA"],
+      "notes": "Scope expands beyond EO-only evidence. System coordination is newly introduced."
+    },
+    {
+      "config_id": "CFG-03",
+      "system_scope": ["EO_CAMERA", "IR_CAMERA", "GIMBAL"],
+      "notes": "Full multi-system configuration. Requires new evidence or explicit revalidation."
+    },
+    {
+      "config_id": "CFG-04",
+      "system_scope": [],
+      "notes": "Ambiguous or incomplete scope metadata. Human review required."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "evidence_records": [
+    {
+      "evidence_id": "EO-SIL-001",
+      "tested_scope": ["EO_CAMERA"],
+      "environment": "SIL",
+      "assumptions": [
+        "EO camera only",
+        "No IR sensor dependency",
+        "No gimbal coordination path exercised"
+      ],
+      "result": "PASS"
+    },
+    {
+      "evidence_id": "EOIR-SIL-002",
+      "tested_scope": ["EO_CAMERA", "IR_CAMERA"],
+      "environment": "SIL",
+      "assumptions": [
+        "EO and IR synchronized at frame level",
+        "No gimbal controller involved"
+      ],
+      "result": "PASS"
+    },
+    {
+      "evidence_id": "EOIR-GIMBAL-SIL-003",
+      "tested_scope": ["EO_CAMERA", "IR_CAMERA", "GIMBAL"],
+      "environment": "SIL",
+      "assumptions": [
+        "EO and IR frame timestamps aligned within the gimbal control loop",
+        "Gimbal command acknowledgment path included"
+      ],
+      "result": "PASS"
+    }
+  ]
+}
