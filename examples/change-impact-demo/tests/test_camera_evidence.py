@@ -99,3 +99,33 @@ def test_document_rule_ids_exist_in_code():
 
 def test_generated_dataset_round_trips_as_json():
     assert json.loads(json.dumps(generate(SEED))) == generate(SEED)
+
+
+def test_mismatched_interface_or_configuration_never_reuses_evidence():
+    """Independent invariant, not driven by expected outcomes in fixture rows."""
+    baseline, cases = build(generate())
+    for case in cases:
+        for field, mismatch in (("interface_version", "IF-OTHER"), ("config_hash", "CFG-OTHER")):
+            changed = replace(case.evidence, result="PASS", **{field: mismatch})
+            result = recommend(replace(case, evidence=changed), baseline)
+            assert result.outcome != "REUSE", (case.req_id, field)
+
+
+def test_multiple_requirements_get_independent_distinct_dispositions():
+    baseline, cases = build(generate())
+    decisions = assess_cases([cases[0], cases[1], cases[3]], baseline)
+    assert [d.req_id for d in decisions] == ["EO-REQ-001", "EO-REQ-002", "EO-REQ-004"]
+    assert [d.outcome for d in decisions] == ["REUSE", "REVERIFY", "REVIEW"]
+
+
+def test_canonical_json_bytes_are_reproducible():
+    import hashlib
+
+    def digest():
+        payload = json.dumps(generate(SEED), sort_keys=True, separators=(",", ":")).encode("utf-8")
+        return hashlib.sha256(payload).hexdigest()
+
+    assert digest() == digest()
+    assert digest() != hashlib.sha256(
+        json.dumps(generate(SEED + 1), sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
