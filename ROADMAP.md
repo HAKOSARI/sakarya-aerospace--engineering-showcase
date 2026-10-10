@@ -12,17 +12,17 @@ A PASS result is not automatic acceptance. All public examples use synthetic dat
 
 - Public systems-engineering explanations and traceability walkthroughs.
 - Small executable navigation-interface change-impact demonstrator.
-- Synthetic UAV EO-camera interface case, R1–R6 advisory engine, nine seeded scenarios and automated tests **under review in [draft PR #2](../../pull/2)**. Until PR #2 merges, these files may only be present on its development branch; do not assume they are on `main`.
+- Synthetic UAV EO-camera interface case, R1–R6 advisory engine, nine seeded scenarios and automated tests **under review in [draft PR #2](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/pull/2)**. Until PR #2 merges, these files may only be present on its development branch; do not assume they are on `main`.
 
 ## Ways to contribute
 
 | Entry point | Work | Issue |
 | --- | --- | --- |
-| Beginner | Translate / improve documentation and technical terminology | [#3](../../issues/3) |
-| Beginner | Create or generate an inspectable rule-flow diagram | [#4](../../issues/4) |
-| Intermediate | Propose a second synthetic subsystem case (data link or mission computer) | [#5](../../issues/5) |
-| Intermediate / advanced | Specify and test candidate R7+ decision rules | [#6](../../issues/6) |
-| Advanced | Automate isolated R1–R6 mutation experiments and clean reruns | [#7](../../issues/7) |
+| Beginner | Translate / improve documentation and technical terminology | [#3](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/issues/3) |
+| Beginner | Create or generate an inspectable rule-flow diagram | [#4](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/issues/4) |
+| Intermediate | Propose a second synthetic subsystem case (data link or mission computer) | [#5](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/issues/5) |
+| Intermediate / advanced | Specify and test candidate R7+ decision rules | [#6](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/issues/6) |
+| Advanced | Automate isolated R1–R6 mutation experiments and clean reruns | [#7](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/issues/7) |
 
 ## Suggested phases
 
