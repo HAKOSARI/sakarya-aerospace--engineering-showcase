@@ -16,3 +16,7 @@ Each `mutants/*.json` file defines `id`, `rule`, `file`, `old`, `new`, `desc`, `
 Classification is conservative: `KILLED` requires a test assertion failure; `CRASHED` indicates unexpected exceptions; `ERROR` covers test collection or execution infrastructure errors; `INVALID` includes stale replacements and syntax failures. `SURVIVED` means the test suite passed. The CANARY deliberately triggers an assertion to verify the copied code is exercised. Assertion-based canary success alone does not prove the quality of the other tests.
 
 **Status:** Catalog and runner prepared. No mutation execution results have yet been verified. Do not claim mutation coverage, qualification, acceptance, airworthiness or certification. All examples are synthetic; no private laboratory files are included. No employment or internship is promised.
+
+## GitHub Actions
+
+The experimental workflow `.github/workflows/mutation-experiment.yml` runs on relevant pull requests and preserves raw JSON/console logs as artifacts even when expected outcomes do not match. It is **not a required branch-protection check**. Review JSON mutants as executable code before approving outside contributions. The workflow uses read-only permissions and no secrets. A red job may indicate a surviving mutant, a crash, or an infrastructure problem; inspect the artifact before drawing conclusions.
