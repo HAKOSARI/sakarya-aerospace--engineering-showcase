@@ -2,9 +2,9 @@
   "id": "CANARY",
   "rule": "CANARY",
   "file": "src/camera_evidence.py",
-  "old": "    e = case.evidence",
-  "new": "    raise AssertionError('CANARY: isolated mutant was executed')\n    e = case.evidence",
+  "old": "e = case.evidence",
+  "new": "e = case.evidence; raise AssertionError('CANARY: isolated mutant was executed')",
   "desc": "Execution canary: deliberately causes assertion failure in copied decision function",
   "expected": "KILLED",
-  "rationale": "Core non-equivalent behavior mutation; test suite should reject it."
+  "rationale": "Unique indentation-independent injection proves the temporary copied engine is executed; the exact assertion message is required."
 }
