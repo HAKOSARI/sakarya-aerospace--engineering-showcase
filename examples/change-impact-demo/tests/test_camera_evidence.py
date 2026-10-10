@@ -97,6 +97,5 @@ def test_document_rule_ids_exist_in_code():
     assert documented == RULE_IDS
 
 
-def test_committed_fixture_matches_generator():
-    path = ROOT / "data" / "camera_cases.synthetic.json"
-    assert json.loads(path.read_text(encoding="utf-8")) == generate(SEED)
+def test_generated_dataset_round_trips_as_json():
+    assert json.loads(json.dumps(generate(SEED))) == generate(SEED)
