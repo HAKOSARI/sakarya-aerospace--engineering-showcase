@@ -2,34 +2,49 @@
   "evidence_records": [
     {
       "evidence_id": "EO-SIL-001",
+      "test_id": "T-EO-01",
+      "requirement_id": "REQ-EO-01",
+      "interface_version": "EO-V1",
+      "config_hash": "cfg-0001",
+      "date": "2026-09-01T00:00:00Z",
+      "result": "PASS",
+      "human_approval": null,
       "tested_scope": ["EO_CAMERA"],
-      "environment": "SIL",
       "assumptions": [
         "EO camera only",
         "No IR sensor dependency",
         "No gimbal coordination path exercised"
-      ],
-      "result": "PASS"
+      ]
     },
     {
       "evidence_id": "EOIR-SIL-002",
+      "test_id": "T-EOIR-01",
+      "requirement_id": "REQ-EOIR-01",
+      "interface_version": "EOIR-V1",
+      "config_hash": "cfg-0002",
+      "date": "2026-09-10T00:00:00Z",
+      "result": "PASS",
+      "human_approval": null,
       "tested_scope": ["EO_CAMERA", "IR_CAMERA"],
-      "environment": "SIL",
       "assumptions": [
         "EO and IR synchronized at frame level",
         "No gimbal controller involved"
-      ],
-      "result": "PASS"
+      ]
     },
     {
       "evidence_id": "EOIR-GIMBAL-SIL-003",
+      "test_id": "T-EOIR-G-01",
+      "requirement_id": "REQ-EOIR-02",
+      "interface_version": "EOIR-G-V1",
+      "config_hash": "cfg-0003",
+      "date": "2026-09-15T00:00:00Z",
+      "result": "PASS",
+      "human_approval": null,
       "tested_scope": ["EO_CAMERA", "IR_CAMERA", "GIMBAL"],
-      "environment": "SIL",
       "assumptions": [
         "EO and IR frame timestamps aligned within the gimbal control loop",
         "Gimbal command acknowledgment path included"
-      ],
-      "result": "PASS"
+      ]
     }
   ]
 }

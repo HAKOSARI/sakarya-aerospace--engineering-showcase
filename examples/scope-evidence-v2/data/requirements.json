@@ -1,0 +1,19 @@
+{
+  "requirements": [
+    {
+      "requirement_id": "REQ-EO-01",
+      "requirement_scope": ["EO_CAMERA"],
+      "title": "EO camera shall provide valid image frames within accepted quality"
+    },
+    {
+      "requirement_id": "REQ-EOIR-01",
+      "requirement_scope": ["EO_CAMERA", "IR_CAMERA"],
+      "title": "EO and IR streams shall be jointly evaluated for alignment and fused situational awareness"
+    },
+    {
+      "requirement_id": "REQ-EOIR-02",
+      "requirement_scope": ["EO_CAMERA", "IR_CAMERA"],
+      "title": "Combined EO/IR system shall maintain coordinated stream evaluation"
+    }
+  ]
+}
