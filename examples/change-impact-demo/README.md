@@ -65,7 +65,10 @@ These are not contradictory results from one engine: they are **different polici
 | R3 | Known interface or configuration mismatch → REVERIFY | Implemented; tests added |
 | R4 | Missing evidence ID, test ID, interface version, config hash or date → REVIEW | Implemented; tests added |
 | R5 | Stale or future evidence date → REVIEW | Implemented; tests added |
-| R6 | PASS, matching baseline, no traced change → REUSE candidate | Implemented; tests added |
+| R6 | PASS, matching baseline, no traced change and covered scope → REUSE candidate | Implemented; tests added |
+| R7 | Required subsystem scope not covered by one evidence record → REVERIFY | Implemented on R7 feature branch; CI not yet verified |
+
+R7 is evaluated after R5 and before R6. Scope fields are declared per evidence record, never unioned across records. Missing, empty or unknown scope IDs route to R4 REVIEW. Declared scope is not independently verified test coverage; all recommendations remain advisory. See `tests/test_scope_evidence.py` for synthetic scenario targets.
 
 The 365-day evidence-age window is an **invented educational policy**, not an aviation standard. The `human_approval` flag is recorded but is **not** an authorized sign-off: the advisory engine **never accepts** a requirement. It does not execute engineering tests, validate provenance signatures, verify a real configuration hash, manage anomalies, or grant airworthiness approval.
 
@@ -73,7 +76,7 @@ Run locally from `examples/change-impact-demo`:
 
 ```bash
 python data/generate_camera_cases.py
-python -m pytest -q tests/test_camera_evidence.py
+python -m pytest -q tests/test_camera_evidence.py tests/test_scope_evidence.py
 ```
 
 The resulting `data/camera_cases.synthetic.json` is generated data. **Passing pytest means only that synthetic software assertions passed; it does not replace any real test campaign, flight testing, qualification, or certification.** This README does not claim an independently verified PR #2 CI run; consult the relevant GitHub Actions logs for execution evidence.
