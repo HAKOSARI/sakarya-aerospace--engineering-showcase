@@ -1,0 +1,10 @@
+{
+  "id": "R5_disable",
+  "rule": "R5",
+  "file": "src/camera_evidence.py",
+  "old": "elif e.date > baseline.evaluation_date or (baseline.evaluation_date - e.date).days > baseline.max_evidence_age_days:",
+  "new": "elif False and (e.date > baseline.evaluation_date or (baseline.evaluation_date - e.date).days > baseline.max_evidence_age_days):",
+  "desc": "Disable stale date rule",
+  "expected": "KILLED",
+  "rationale": "Core non-equivalent behavior mutation; test suite should reject it."
+}

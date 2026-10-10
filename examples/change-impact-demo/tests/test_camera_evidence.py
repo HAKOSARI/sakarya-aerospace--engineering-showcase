@@ -131,3 +131,23 @@ def test_canonical_json_bytes_are_reproducible():
     assert digest() != hashlib.sha256(
         json.dumps(generate(SEED + 1), sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
+
+
+def test_missing_config_hash_requires_review_even_with_other_evidence_valid():
+    """R4 must reject missing provenance without relying on scenario-table assertions."""
+    baseline, cases = build(generate())
+    candidate = cases[0]
+    evidence = replace(
+        candidate.evidence,
+        result="PASS",
+        interface_version=baseline.interface_version,
+        config_hash=None,
+        date=baseline.evaluation_date,
+    )
+    decision = recommend(
+        replace(candidate, dependencies=frozenset(), evidence=evidence),
+        baseline,
+    )
+    assert decision.outcome == "REVIEW"
+    assert decision.rule_id == "R4"
+    assert decision.accepted is False
