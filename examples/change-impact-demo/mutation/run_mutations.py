@@ -15,10 +15,9 @@ DEMO = Path(__file__).resolve().parents[1]
 CATALOG = Path(__file__).resolve().parent / "mutants"
 TIMEOUT = 90
 
-EXPECTED_TESTS = 13
 ASSERT_PREFIXES = ("AssertionError", "assert ", "Failed:")
 
-def classify(code, xml_file):
+def classify(code, xml_file, expected_tests=None):
     info = {"assertion_failures": [], "crashes": [], "errors": [], "tests": 0, "skipped": 0, "failure_heads": []}
     if code not in (0, 1) or not xml_file.exists():
         return "ERROR", info
@@ -29,7 +28,7 @@ def classify(code, xml_file):
     cases = list(root.iter("testcase"))
     info["tests"] = len(cases)
     info["skipped"] = sum(tc.find("skipped") is not None for tc in cases)
-    if info["tests"] != EXPECTED_TESTS or info["skipped"]:
+    if (expected_tests is not None and info["tests"] != expected_tests) or info["skipped"]:
         return "ERROR", info
     for tc in cases:
         name = f'{tc.get("classname", "")}::{tc.get("name", "")}'
@@ -52,7 +51,7 @@ def classify(code, xml_file):
         return "SURVIVED", info
     return "ERROR", info
 
-def test(work):
+def test(work, expected_tests=None):
     xml_file = work / "mutation-junit.xml"
     env = dict(os.environ)
     env["PYTHONPATH"] = str(work / "src") + os.pathsep + str(work / "data")
@@ -64,7 +63,7 @@ def test(work):
                            text=True, timeout=TIMEOUT)
     except subprocess.TimeoutExpired:
         return "TIMEOUT", {}, "Timed out"
-    status, info = classify(p.returncode, xml_file)
+    status, info = classify(p.returncode, xml_file, expected_tests)
     return status, info, (p.stdout + "\n" + p.stderr)[-2500:]
 
 def main():
@@ -81,6 +80,7 @@ def main():
         status, baseline_info, log = test(base)
         if status != "SURVIVED":
             sys.exit("Baseline must pass before mutation: " + status + "\n" + log)
+        expected_tests = baseline_info["tests"]
         for mutant in mutants:
             work = Path(tmp) / mutant["id"]
             shutil.copytree(base, work)
@@ -98,7 +98,7 @@ def main():
                     except py_compile.PyCompileError as exc:
                         status, info, detail = "INVALID", {}, str(exc)
                     else:
-                        status, info, detail = test(work)
+                        status, info, detail = test(work, expected_tests)
             results.append({"id": mutant["id"], "rule": mutant["rule"],
                             "expected": mutant["expected"], "status": status,
                             "killers": info.get("assertion_failures", []), "assertion_failures": info.get("assertion_failures", []),
@@ -114,7 +114,7 @@ def main():
         "CANARY: isolated mutant was executed" in item["head"] for item in canary["failure_heads"]
     ):
         sys.exit("CANARY did not execute as expected")
-    # Canary deliberately raises: a CRASHED canary proves isolation, not assertion quality.
+    # Canary must produce the exact assertion message in the isolated copy.
     if any(m["status"] != m["expected"] for m in results if m["id"] != "CANARY"):
         sys.exit(1)
     print("Core mutation expectations satisfied (canary is execution-only).")
