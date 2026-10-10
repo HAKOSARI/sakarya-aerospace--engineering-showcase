@@ -34,3 +34,28 @@ Earlier [run 38041864370](https://github.com/HAKOSARI/sakarya-aerospace--enginee
 This is **not** an exhaustive mutation score. It depends on the deliberately selected mutants; other logical operators, R5 date boundaries, R1/R2 precedence, rule-ID-only mutations and human-approval mutations remain future student contribution opportunities (Issue #7). One assertion-based killer for R4 is not yet the preferred two independent lines of defense for critical rules. The engine makes advisory REUSE/REVIEW/REVERIFY recommendations only; it never accepts or certifies a real system.
 
 **Review status:** Technical experiment verified; PR #9 remains Draft and unmerged. No private laboratory content was used. Final owner approval and additional student review are still required before any merge.
+
+## Later R7 integration verification — Draft PR #11
+
+This is a separate later run; historical R1–R6 evidence above is retained. Commit `bec454d333370fdb30c8b1cb330dbaeec27aedf7` on isolated integration branch.
+
+- [Mutation experiment #9](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38081602639): success; artifact `mutation-results-raw` ID `11680945329`, SHA-256 `3d766f17a911472fa1fe704d00ca5cf83a4255e856c9d17148227309d65e8064`.
+- [Camera Evidence #23](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38081602625): 34 passed.
+- [Showcase CI #45](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38081602677): 3 tests OK.
+
+| Rule | Mutant | Result | Assertion failures |
+|---|---|---|---:|
+| Canary | CANARY | KILLED | 26 |
+| R1 | R1_disable | KILLED | 3 |
+| R2 | R2_disable | KILLED | 3 |
+| R3 | R3_unsafe_reuse | KILLED | 3 |
+| R4 | R4_drop_config_hash | KILLED | 1 |
+| R5 | R5_disable | KILLED | 4 |
+| R6 | R6_wrong_label | KILLED | 10 |
+| R7 | R7_disable | KILLED | 8 |
+| R7 | R7_nonempty_intersection | KILLED | 10 |
+| R7 | R7_subset_direction_swapped | KILLED | 8 |
+| R7 | R7_subset_to_equality | KILLED | 2 |
+| R7 | R7_wrong_label | KILLED | 8 |
+
+**Selected core mutants: 11/11 KILLED; no SURVIVED or INVALID reported.** Canary separately KILLED. R7/R6 ordering mutant not included. This is synthetic software evidence, not exhaustive mutation coverage, verified physical subsystem scope, certification, or engineering acceptance. PR #11 remains Draft pending explicit merge approval.

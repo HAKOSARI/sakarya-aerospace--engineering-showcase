@@ -52,7 +52,7 @@ This repository contains **two separate synthetic decision models**, with intent
 | Original change-impact demo | `src/change_impact.py` | **REVIEW** (its simplified demo policy) |
 | EO camera evidence engine (PR #2) | `src/camera_evidence.py` | **REVERIFY / R3** (its camera evidence policy) |
 
-These are not contradictory results from one engine: they are **different policies in different modules**. Case Study 02, *Composite-System Scope Mismatch in Verification Evidence Reuse*, proposes extending the **camera evidence engine**, not changing the original demo. No R7 implementation or CI result is claimed here.
+These are not contradictory results from one engine: they are **different policies in different modules**. Case Study 02, *Composite-System Scope Mismatch in Verification Evidence Reuse*, proposes extending the **camera evidence engine**, not changing the original demo. R7 is implemented and synthetically verified on the integration branch; see verified checks below.
 
 ## Synthetic EO camera evidence engine (PR #2)
 
@@ -66,7 +66,7 @@ These are not contradictory results from one engine: they are **different polici
 | R4 | Missing evidence ID, test ID, interface version, config hash or date → REVIEW | Implemented; tests added |
 | R5 | Stale or future evidence date → REVIEW | Implemented; tests added |
 | R6 | PASS, matching baseline, no traced change and covered scope → REUSE candidate | Implemented; tests added |
-| R7 | Required subsystem scope not covered by one evidence record → REVERIFY | Implemented on R7 feature branch; CI not yet verified |
+| R7 | Required subsystem scope not covered by one evidence record → REVERIFY | Implemented on integration branch; CI verified at bec454d |
 
 R7 is evaluated after R5 and before R6. Scope fields are declared per evidence record, never unioned across records. Missing, empty or unknown scope IDs route to R4 REVIEW. Declared scope is not independently verified test coverage; all recommendations remain advisory. See `tests/test_scope_evidence.py` for synthetic scenario targets.
 
@@ -80,3 +80,7 @@ python -m pytest -q tests/test_camera_evidence.py tests/test_scope_evidence.py
 ```
 
 The resulting `data/camera_cases.synthetic.json` is generated data. **Passing pytest means only that synthetic software assertions passed; it does not replace any real test campaign, flight testing, qualification, or certification.** This README does not claim an independently verified PR #2 CI run; consult the relevant GitHub Actions logs for execution evidence.
+
+## Verified integration-branch checks
+
+At commit `bec454d333370fdb30c8b1cb330dbaeec27aedf7`, [Camera Evidence #23](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38081602625) passed 34 tests, [Showcase CI #45](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38081602677) passed 3 tests, and [Mutation experiment #9](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38081602639) killed all 11 selected core R1–R7 mutants plus canary. These are synthetic software checks, not real-world engineering acceptance.
