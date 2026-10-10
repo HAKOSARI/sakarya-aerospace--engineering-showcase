@@ -30,7 +30,7 @@ def generate(seed: int = SEED) -> dict:
             "dependencies": dependencies, "evidence_id": f"SYN-EV-{index:03d}",
             "test_id": f"SYN-TST-{index:03d}", "interface_version": version,
             "config_hash": config, "date": recorded, "result": result,
-            "human_approval": approval, "expected_outcome": expected,
+            "human_approval": approval, "requirement_scope": ["EO_CAMERA"], "tested_scope": ["EO_CAMERA"], "expected_outcome": expected,
             "expected_rule_id": rule, "sample_sequence": rng.randint(1000, 9999),
         })
     return {
