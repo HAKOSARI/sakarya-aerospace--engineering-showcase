@@ -1,0 +1,10 @@
+{
+  "id": "CANARY",
+  "rule": "CANARY",
+  "file": "src/camera_evidence.py",
+  "old": "    e = case.evidence",
+  "new": "    raise RuntimeError('CANARY: isolated mutant was executed')\n    e = case.evidence",
+  "desc": "Intentional execution canary",
+  "expected": "KILLED",
+  "rationale": "Core non-equivalent behavior mutation; test suite should reject it."
+}
