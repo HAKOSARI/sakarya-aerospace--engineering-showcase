@@ -15,37 +15,42 @@ DEMO = Path(__file__).resolve().parents[1]
 CATALOG = Path(__file__).resolve().parent / "mutants"
 TIMEOUT = 90
 
+EXPECTED_TESTS = 13
+ASSERT_PREFIXES = ("AssertionError", "assert ", "Failed:")
+
 def classify(code, xml_file):
+    info = {"assertion_failures": [], "crashes": [], "errors": [], "tests": 0, "skipped": 0, "failure_heads": []}
     if code not in (0, 1) or not xml_file.exists():
-        return "ERROR", []
+        return "ERROR", info
     try:
         root = ET.parse(xml_file).getroot()
     except ET.ParseError:
-        return "ERROR", []
+        return "ERROR", info
     cases = list(root.iter("testcase"))
-    if not cases:
-        return "ERROR", []
-    assertions, crashes, errors = [], [], []
+    info["tests"] = len(cases)
+    info["skipped"] = sum(tc.find("skipped") is not None for tc in cases)
+    if info["tests"] != EXPECTED_TESTS or info["skipped"]:
+        return "ERROR", info
     for tc in cases:
         name = f'{tc.get("classname", "")}::{tc.get("name", "")}'
         if tc.find("error") is not None:
-            errors.append(name)
+            info["errors"].append(name)
         failure = tc.find("failure")
         if failure is not None:
-            msg = (failure.get("message") or "") + "\n" + (failure.text or "")
-            if "AssertionError" in msg or "Failed:" in msg or "pytest.fail" in msg:
-                assertions.append(name)
-            else:
-                crashes.append(name)
-    if errors:
-        return "ERROR", errors
-    if crashes:
-        return "CRASHED", crashes
-    if assertions and code == 1:
-        return "KILLED", assertions
-    if code == 0 and not assertions:
-        return "SURVIVED", []
-    return "ERROR", []
+            lines = (failure.get("message") or "").strip().splitlines()
+            head = lines[0] if lines else ""
+            info["failure_heads"].append({"test": name, "head": head})
+            key = "assertion_failures" if head.startswith(ASSERT_PREFIXES) else "crashes"
+            info[key].append(name)
+    if info["errors"]:
+        return "ERROR", info
+    if info["crashes"]:
+        return "CRASHED", info
+    if info["assertion_failures"] and code == 1:
+        return "KILLED", info
+    if code == 0 and not info["assertion_failures"]:
+        return "SURVIVED", info
+    return "ERROR", info
 
 def test(work):
     xml_file = work / "mutation-junit.xml"
@@ -58,9 +63,9 @@ def test(work):
         p = subprocess.run(cmd, cwd=work, env=env, capture_output=True,
                            text=True, timeout=TIMEOUT)
     except subprocess.TimeoutExpired:
-        return "TIMEOUT", [], "Timed out"
-    status, killers = classify(p.returncode, xml_file)
-    return status, killers, (p.stdout + "\n" + p.stderr)[-2500:]
+        return "TIMEOUT", {}, "Timed out"
+    status, info = classify(p.returncode, xml_file)
+    return status, info, (p.stdout + "\n" + p.stderr)[-2500:]
 
 def main():
     parser = argparse.ArgumentParser()
@@ -73,7 +78,7 @@ def main():
     with tempfile.TemporaryDirectory(prefix="suhavx-mutation-") as tmp:
         base = Path(tmp) / "base"
         shutil.copytree(DEMO, base, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "mutation-junit.xml"))
-        status, _, log = test(base)
+        status, baseline_info, log = test(base)
         if status != "SURVIVED":
             sys.exit("Baseline must pass before mutation: " + status + "\n" + log)
         for mutant in mutants:
@@ -81,27 +86,33 @@ def main():
             shutil.copytree(base, work)
             target = (work / mutant["file"]).resolve()
             if not target.is_relative_to(work.resolve()) or not target.is_file():
-                status, killers, detail = "INVALID", [], "Invalid target path"
+                status, info, detail = "INVALID", {}, "Invalid target path"
             else:
                 source = target.read_text(encoding="utf-8")
                 if source.count(mutant["old"]) != 1:
-                    status, killers, detail = "INVALID", [], "Original text not uniquely found"
+                    status, info, detail = "INVALID", {}, "Original text not uniquely found"
                 else:
                     target.write_text(source.replace(mutant["old"], mutant["new"]), encoding="utf-8")
                     try:
                         py_compile.compile(str(target), cfile=str(work / "mutant.pyc"), doraise=True)
                     except py_compile.PyCompileError as exc:
-                        status, killers, detail = "INVALID", [], str(exc)
+                        status, info, detail = "INVALID", {}, str(exc)
                     else:
-                        status, killers, detail = test(work)
+                        status, info, detail = test(work)
             results.append({"id": mutant["id"], "rule": mutant["rule"],
                             "expected": mutant["expected"], "status": status,
-                            "killers": killers, "rationale": mutant["rationale"],
+                            "killers": info.get("assertion_failures", []), "assertion_failures": info.get("assertion_failures", []),
+                            "crashes": info.get("crashes", []), "errors": info.get("errors", []),
+                            "tests": info.get("tests"), "skipped": info.get("skipped"),
+                            "failure_heads": info.get("failure_heads", []),
+                            "rationale": mutant["rationale"],
                             "detail": detail if status != "KILLED" else ""})
-            print(f'{mutant["id"]}: {status} ({len(killers)} tests)')
+            print(f'{mutant["id"]}: {status} ({len(info.get("assertion_failures", []))} assertions)')
     args.output.write_text(json.dumps(results, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     canary = next((m for m in results if m["id"] == "CANARY"), None)
-    if canary is None or canary["status"] not in ("CRASHED", "KILLED"):
+    if canary is None or canary["status"] != "KILLED" or not any(
+        "CANARY: isolated mutant was executed" in item["head"] for item in canary["failure_heads"]
+    ):
         sys.exit("CANARY did not execute as expected")
     # Canary deliberately raises: a CRASHED canary proves isolation, not assertion quality.
     if any(m["status"] != m["expected"] for m in results if m["id"] != "CANARY"):
