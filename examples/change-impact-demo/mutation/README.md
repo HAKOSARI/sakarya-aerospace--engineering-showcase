@@ -1,6 +1,6 @@
 # Synthetic camera mutation experiment (draft)
 
-This folder contains a **non-blocking, manual** mutation experiment for the synthetic R1–R6 advisory engine. It is based on the code in draft PR #2, not on the default branch.
+This folder contains a **non-blocking, manually curated** mutation experiment for the synthetic R1–R7 advisory engine. It is based on the code in draft PR #2, not on the default branch.
 
 From the repository root, install pytest and run:
 
@@ -15,7 +15,7 @@ Each `mutants/*.json` file defines `id`, `rule`, `file`, `old`, `new`, `desc`, `
 
 Classification is conservative: `KILLED` requires a test assertion failure; `CRASHED` indicates unexpected exceptions; `ERROR` covers test collection or execution infrastructure errors; `INVALID` includes stale replacements and syntax failures. `SURVIVED` means the test suite passed. The CANARY deliberately triggers an assertion to verify the copied code is exercised. Assertion-based canary success alone does not prove the quality of the other tests.
 
-**Status:** Catalog and runner prepared. No mutation execution results have yet been verified. Do not claim mutation coverage, qualification, acceptance, airworthiness or certification. All examples are synthetic; no private laboratory files are included. No employment or internship is promised.
+**Status at integration commit `bec454d`:** [run 38081602639](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38081602639) killed 11/11 selected core mutants plus canary; no SURVIVED or INVALID reported. This is not exhaustive mutation coverage. Do not claim mutation coverage, qualification, acceptance, airworthiness or certification. All examples are synthetic; no private laboratory files are included. No employment or internship is promised.
 
 ## GitHub Actions
 
@@ -28,3 +28,7 @@ GitHub Actions run [38041864370](https://github.com/HAKOSARI/sakarya-aerospace--
 ## Verified follow-up
 
 After adding the independent missing-config-hash R4 test, [run 38042059836](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38042059836) completed successfully: **7/7 selected mutants KILLED (including canary), 0 survived**. The artifact is [here](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38042059836/artifacts/11666432206). See [mutation report](../../../docs/mutation-report.md). This does not imply exhaustive mutation coverage.
+
+## R7 integration evidence
+
+At integration commit `bec454d333370fdb30c8b1cb330dbaeec27aedf7`, [mutation run #9](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38081602639) completed successfully: all 11 selected R1–R7 core mutants and canary KILLED. Raw artifact ID `11680945329`, SHA-256 `3d766f17a911472fa1fe704d00ca5cf83a4255e856c9d17148227309d65e8064`. Historical R1–R6 results above are retained. R7/R6 ordering mutant is excluded from this selected catalog. See [mutation report](../../../docs/mutation-report.md).

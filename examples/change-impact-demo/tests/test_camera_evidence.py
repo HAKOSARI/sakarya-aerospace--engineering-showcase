@@ -28,11 +28,13 @@ def build(data):
     cases = [
         RequirementCase(
             req_id=row["req_id"], dependencies=frozenset(row["dependencies"]),
+            requirement_scope=frozenset(row["requirement_scope"]) if row.get("requirement_scope") else None,
             evidence=Evidence(
                 evidence_id=row["evidence_id"], test_id=row["test_id"],
                 interface_version=row["interface_version"], config_hash=row["config_hash"],
                 date=date.fromisoformat(row["date"]) if row["date"] else None,
                 result=row["result"], human_approval=row["human_approval"],
+                tested_scope=frozenset(row["tested_scope"]) if row.get("tested_scope") else None,
             ),
         )
         for row in data["cases"]

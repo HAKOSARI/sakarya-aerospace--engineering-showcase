@@ -1,0 +1,10 @@
+{
+  "id": "R7_subset_direction_swapped",
+  "rule": "R7",
+  "file": "src/camera_evidence.py",
+  "old": "elif case.requirement_scope - e.tested_scope:",
+  "new": "elif e.tested_scope - case.requirement_scope:",
+  "desc": "Reverse missing-coverage direction",
+  "expected": "KILLED",
+  "rationale": "Non-equivalent scope-coverage mutation; existing scenario and exhaustive tests should reject it."
+}
