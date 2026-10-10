@@ -43,9 +43,20 @@ For `DEMO-CHG-001`:
 
 This output is educational engineering workflow evidence only. It is not a certification, qualification or airworthiness determination.
 
+## Two distinct decision engines
+
+This repository contains **two separate synthetic decision models**, with intentionally different configuration-mismatch dispositions:
+
+| Engine | File | Known configuration mismatch |
+|---|---|---|
+| Original change-impact demo | `src/change_impact.py` | **REVIEW** (its simplified demo policy) |
+| EO camera evidence engine (PR #2) | `src/camera_evidence.py` | **REVERIFY / R3** (its camera evidence policy) |
+
+These are not contradictory results from one engine: they are **different policies in different modules**. Case Study 02, *Composite-System Scope Mismatch in Verification Evidence Reuse*, proposes extending the **camera evidence engine**, not changing the original demo. No R7 implementation or CI result is claimed here.
+
 ## Synthetic EO camera evidence engine (PR #2)
 
-**Implemented in code (not yet CI-verified):** `src/camera_evidence.py` provides provisional per-requirement recommendations; `data/generate_camera_cases.py` generates a deterministic, explicitly synthetic JSON dataset using seed `20261010`; `tests/test_camera_evidence.py` contains pytest tests. The original `src/change_impact.py` remains unchanged.
+**Implemented in this PR branch (CI status must be checked against the relevant run):** `src/camera_evidence.py` provides provisional per-requirement recommendations; `data/generate_camera_cases.py` generates a deterministic, explicitly synthetic JSON dataset using seed `20261010`; `tests/test_camera_evidence.py` contains pytest tests. The original `src/change_impact.py` remains unchanged.
 
 | Rule | Implemented decision | Status |
 |---|---|---|
@@ -65,4 +76,4 @@ python data/generate_camera_cases.py
 python -m pytest -q tests/test_camera_evidence.py
 ```
 
-The resulting `data/camera_cases.synthetic.json` is generated data. **Passing pytest means only that synthetic software assertions passed; it does not replace any real test campaign, flight testing, qualification, or certification.** Test execution and CI results have not yet been independently verified in this PR.
+The resulting `data/camera_cases.synthetic.json` is generated data. **Passing pytest means only that synthetic software assertions passed; it does not replace any real test campaign, flight testing, qualification, or certification.** This README does not claim an independently verified PR #2 CI run; consult the relevant GitHub Actions logs for execution evidence.
