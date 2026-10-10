@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>R1–R7 Synthetic Evidence Lab</title>
+<style>body{font:16px system-ui,sans-serif;max-width:960px;margin:36px auto;padding:0 20px;color:#15202b;background:#f6f8fb}header,section{background:white;border:1px solid #dce3ea;border-radius:14px;padding:22px;margin-bottom:18px}h1{margin-top:0}p{line-height:1.5}label{display:block;font-weight:600;margin:10px 0 5px}input,select,button{font:inherit;padding:10px;border:1px solid #a6b3c0;border-radius:7px;max-width:100%;box-sizing:border-box}input,select{width:100%}button{cursor:pointer;background:#113b68;color:white;border:0;margin-top:16px}fieldset{border:1px solid #dce3ea;border-radius:8px;margin-top:14px}legend{font-weight:600}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.notice{color:#8a3d00}.result{font-size:1.4rem;font-weight:700}code{background:#eef1f4;padding:2px 5px}small{color:#506070}</style></head><body>
+<header><h1>R1–R7 Synthetic Evidence Lab</h1><p>Change one EO-camera evidence field and inspect the <strong>advisory</strong> result. This is a standalone, no-server teaching demo; all inputs are fabricated.</p><p class="notice"><strong>Not qualification, certification, airworthiness, flight-test evidence, or engineering acceptance.</strong> The Python engine in this repository is authoritative; this JavaScript is a manually mirrored teaching implementation.</p><p><a href="../README.md">Reference Python instructions</a> · <a href="../../../CONTRIBUTING.md">Contribute</a></p></header>
+<section><label for="scenario">Scenario</label><select id="scenario"><option value="reuse">R6 — matching PASS evidence</option><option value="fail">R1 — failed evidence</option><option value="dependency">R2 — changed dependency</option><option value="interface">R3 — interface mismatch</option><option value="missing">R4 — missing provenance</option><option value="stale">R5 — stale evidence</option><option value="scope">R7 — missing required subsystem</option></select>
+<div class="grid"><div><label for="result">Evidence result</label><select id="result"><option>PASS</option><option>FAIL</option><option>INCONCLUSIVE</option></select></div><div><label for="changed">Changed dependency? </label><select id="changed"><option value="no">No</option><option value="yes">Yes (CAMERA_CODEC)</option></select></div><div><label for="version">Evidence interface version</label><input id="version" value="IF-B"></div><div><label for="config">Evidence configuration hash (synthetic label)</label><input id="config" value="CFG-B"></div><div><label for="evidence">Evidence ID</label><input id="evidence" value="SYN-EV-001"></div><div><label for="test">Test ID</label><input id="test" value="SYN-TST-001"></div><div><label for="date">Evidence date</label><input id="date" type="date" value="2026-09-20"></div><div><label for="required">Required scope (comma-separated)</label><input id="required" value="EO_CAMERA"></div><div><label for="tested">Tested scope (comma-separated)</label><input id="tested" value="EO_CAMERA"></div></div><button id="evaluate">Evaluate synthetic case</button></section>
+<section aria-live="polite"><div id="outcome" class="result">REUSE candidate — R6</div><p id="rationale">Press Evaluate to inspect the current case.</p><small>Reference baseline: IF-B / CFG-B; evaluation date 2026-10-10; maximum age 365 days (invented educational policy). No automatic acceptance, even if evidence says PASS.</small></section>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const known=new Set(["EO_CAMERA","IR_CAMERA","GIMBAL","LASER_RANGEFINDER","MISSION_COMPUTER"]);
+const scope=id=>new Set($(id).value.split(",").map(x=>x.trim()).filter(Boolean));
+function evaluate(){
+ const result=$("result").value, required=scope("required"),tested=scope("tested"),d=$("date").value;
+ let outcome,rule,why;
+ if(result!=="PASS"){[outcome,rule,why]=["REVIEW","R1","Failed or inconclusive evidence; investigate anomaly or gap"];}
+ else if($("changed").value==="yes"){[outcome,rule,why]=["REVERIFY","R2","Changed traced requirement dependency"];}
+ else if(($("version").value&&$("version").value!=="IF-B")||($("config").value&&$("config").value!=="CFG-B")){[outcome,rule,why]=["REVERIFY","R3","Evidence interface or configuration differs from target baseline"];}
+ else if(!$("evidence").value.trim()||!$("test").value.trim()||!$("version").value||!$("config").value||!d||!required.size||!tested.size||[...required,...tested].some(x=>!known.has(x))){[outcome,rule,why]=["REVIEW","R4","Incomplete evidence identity, version, configuration, date or scope"];}
+ else if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||!Number.isFinite(Date.parse(d+"T00:00:00Z"))){[outcome,rule,why]=["REVIEW","R4","Invalid evidence date"];}
+ else if(Date.parse(d+"T00:00:00Z")>Date.parse("2026-10-10T00:00:00Z")||(Date.parse("2026-10-10T00:00:00Z")-Date.parse(d+"T00:00:00Z"))/86400000>365){[outcome,rule,why]=["REVIEW","R5","Evidence date outside synthetic applicability window"];}
+ else if([...required].some(x=>!tested.has(x))){[outcome,rule,why]=["REVERIFY","R7","Evidence scope does not cover required subsystems: "+[...required].filter(x=>!tested.has(x)).sort().join(", ")];}
+ else {[outcome,rule,why]=["REUSE","R6","Candidate only: PASS, matching baseline and no traced change"];}
+ $("outcome").textContent=outcome+(outcome==="REUSE"?" candidate":"")+" — "+rule;
+ $("rationale").textContent=why+". Human engineering approval is still required; accepted=false.";
+ return {outcome,rule};
+}
+const scenarios={reuse:{},fail:{result:"FAIL"},dependency:{changed:"yes"},interface:{version:"IF-A"},missing:{evidence:""},stale:{date:"2024-09-20"},scope:{required:"EO_CAMERA,GIMBAL",tested:"EO_CAMERA"}};
+function reset(){for(const [id,value] of Object.entries({result:"PASS",changed:"no",version:"IF-B",config:"CFG-B",evidence:"SYN-EV-001",test:"SYN-TST-001",date:"2026-09-20",required:"EO_CAMERA",tested:"EO_CAMERA",...scenarios[$("scenario").value]}))$(id).value=value;evaluate();}
+$("scenario").addEventListener("change",reset);$("evaluate").addEventListener("click",evaluate);reset();
+</script></body></html>
