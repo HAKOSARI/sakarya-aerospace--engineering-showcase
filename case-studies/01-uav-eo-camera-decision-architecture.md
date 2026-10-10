@@ -132,3 +132,9 @@ This camera case **illustrates how the same reasoning pattern can be applied** t
 - [ ] Diagrams and data remain explicitly synthetic
 
 **Sakarya Aerospace / SUHAVX — Open engineering • Reproducible evidence • Human-reviewed decisions.**
+
+## Executable coverage and limitations (PR #2)
+
+The new companion module `examples/change-impact-demo/src/camera_evidence.py` implements provisional rules **R1–R6**: R1 failed/inconclusive → REVIEW; R2 traced change → REVERIFY; R3 known interface/configuration mismatch → REVERIFY; R4 missing evidence identity/version/configuration/date → REVIEW; R5 out-of-window date → REVIEW; R6 matching PASS evidence → REUSE candidate. See [demo README](../examples/change-impact-demo/README.md) for the status table and pytest commands.
+
+**Implemented:** basic field comparison, provisional recommendation, synthetic-date window and recorded approval flag. **Not implemented:** actual test execution, anomaly lifecycle, human authorization workflow, verified evidence provenance or real certification decision. Thus Figure 1 is a **conceptual engineering workflow**, not a literal flowchart of all executed Python operations. Passing synthetic pytest tests is not a real verification campaign.
