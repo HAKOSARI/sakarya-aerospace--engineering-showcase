@@ -5,6 +5,12 @@ const vm = require("node:vm");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
+// Regression: translated option labels must never change the underlying engineering result.
+assert.match(html, /<html[^>]*translate="no"/, "Keep the engineering UI out of automatic translation");
+assert.match(html, /<meta name="google" content="notranslate">/, "Advertise translation opt-out");
+for (const status of ["PASS", "FAIL", "INCONCLUSIVE"]) {
+  assert.ok(html.includes('<option value="' + status + '">' + status + '</option>'), status + " needs a stable machine value");
+}
 const script = html.match(/<script>([\s\S]*?)<\/script>/);
 assert.ok(script, "Inline demo script must exist");
 const ids = ["scenario","result","changed","version","config","evidence","test","date","required","tested","evaluate","outcome","rationale"];
@@ -25,4 +31,8 @@ preset("reuse");elements.version.value="IF-A";elements.evidence.value="";assert.
 preset("reuse");elements.evidence.value="";elements.date.value="2024-01-01";assert.equal(evalDemo().rule,"R4","R4 must override R5");
 preset("reuse");elements.date.value="2024-01-01";elements.required.value="EO_CAMERA,GIMBAL";assert.equal(evalDemo().rule,"R5","R5 must override R7");
 preset("reuse");elements.required.value="EO_CAMERA,GIMBAL";assert.equal(evalDemo().rule,"R7","R7 must override R6");
-console.log("13 synthetic browser demo assertions passed (7 presets + 6 precedence cases).");
+// Simulate a browser translating visible labels while preserving explicit option values.
+preset("reuse");
+elements.result.value="PASS";elements.changed.value="yes";
+assert.equal(evalDemo().rule,"R2","Translated visible label must not change R2 priority");
+console.log("17 browser demo checks passed (7 presets + 6 precedence + 4 translation safeguards).");
