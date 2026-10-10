@@ -1,0 +1,10 @@
+{
+  "id": "R4_disable",
+  "rule": "R4",
+  "file": "src/camera_evidence.py",
+  "old": "elif not e.evidence_id or not e.test_id or not e.interface_version or not e.config_hash or e.date is None:",
+  "new": "elif False and (not e.evidence_id or not e.test_id or not e.interface_version or not e.config_hash or e.date is None):",
+  "desc": "Disable missing provenance rule",
+  "expected": "KILLED",
+  "rationale": "Core non-equivalent behavior mutation; test suite should reject it."
+}
