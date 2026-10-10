@@ -1,0 +1,10 @@
+{
+  "id": "R7_nonempty_intersection",
+  "rule": "R7",
+  "file": "src/camera_evidence.py",
+  "old": "elif case.requirement_scope - e.tested_scope:",
+  "new": "elif case.requirement_scope & e.tested_scope:",
+  "desc": "Use overlap instead of required scope coverage",
+  "expected": "KILLED",
+  "rationale": "Non-equivalent scope-coverage mutation; existing scenario and exhaustive tests should reject it."
+}
