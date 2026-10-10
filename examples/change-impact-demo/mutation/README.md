@@ -24,3 +24,7 @@ The experimental workflow `.github/workflows/mutation-experiment.yml` runs on re
 ## First observed execution
 
 GitHub Actions run [38041864370](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38041864370) completed with an expected red result: 6 mutants killed (including canary) and 1 survived (`R4_drop_config_hash`). Raw artifact: [mutation-results-raw](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38041864370/artifacts/11666247060), ZIP SHA-256 `da80dddadfcc75d00f2e60c1d9ed0adf796f415a94872a48cc375887c701d2c8`. A focused R4 test was subsequently added; its effect on mutation results must be verified in a later run. This is not a complete mutation campaign.
+
+## Verified follow-up
+
+After adding the independent missing-config-hash R4 test, [run 38042059836](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38042059836) completed successfully: **7/7 selected mutants KILLED (including canary), 0 survived**. The artifact is [here](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38042059836/artifacts/11666432206). See [mutation report](../../../docs/mutation-report.md). This does not imply exhaustive mutation coverage.
