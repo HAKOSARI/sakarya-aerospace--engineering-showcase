@@ -1,16 +1,28 @@
 # Sakarya Aerospace — Engineering Showcase
 
-Public engineering showcase for **Sakarya Aerospace / SUHAVX**.
+[![Showcase CI](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/showcase-ci.yml/badge.svg)](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/showcase-ci.yml) [![Synthetic Camera Evidence Tests](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/camera-evidence-tests.yml/badge.svg)](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/camera-evidence-tests.yml) [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-[![Showcase CI](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/showcase-ci.yml/badge.svg)](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/workflows/showcase-ci.yml)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+**Open engineering • Reproducible synthetic evidence • Human-reviewed decisions**
 
-**Open engineering • Reproducible evidence • Human-reviewed decisions**
+**The problem:** A UAV EO-camera interface changes. Which existing verification evidence may be reused, which needs review, and which must be rerun?
 
-We are exploring verification intelligence for complex aerospace and unmanned-system integration: how requirements, interfaces, changes, verification activities, evidence, and engineering decisions remain traceable to one another.
+**Try it in 5 minutes:** [Open the no-install R1–R7 browser demo](examples/change-impact-demo/web/index.html) (on GitHub, click **Download raw file** and open it locally; a hosted demo is not yet deployed). Choose a scenario, change a configuration or scope field, then press **Evaluate**. The page is entirely client-side and uses fabricated examples. For an audited executable reference, run the Python tests below.
 
-> **Core question:** When something changes in a system, what must be verified again — and what existing evidence can still be trusted?
+**Run the reference engine (Python 3.10+):**
 
+```bash
+cd examples/change-impact-demo
+python data/generate_camera_cases.py
+python -m pytest -q tests/test_camera_evidence.py tests/test_scope_evidence.py
+```
+
+**Community standards:** [Code of Conduct](CODE_OF_CONDUCT.md) · [Contribution guide](CONTRIBUTING.md) · [Security policy](SECURITY.md) · [Discussion governance](docs/community-governance.md) · [Public metrics](docs/public-metrics.md).
+
+**First contribution in 30 minutes:** Read [CONTRIBUTING.md](CONTRIBUTING.md), choose a [good first issue](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22), and open a small PR with a reproducible change. Start with a documentation clarification or an additional synthetic test.
+
+**Current public baseline:** R1–R7 synthetic EO-camera advisory rules, 34 camera tests, 3 showcase tests and 11 selected mutation checks were verified for [PR #12](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/pull/12) before merge. This is **software verification of invented cases**, not aircraft certification, airworthiness, HIL/flight-test evidence, customer evidence, or engineering acceptance. The browser demo is an educational reimplementation; the Python module is the reference behavior.
+
+---
 ## Focus
 
 - Systems Engineering

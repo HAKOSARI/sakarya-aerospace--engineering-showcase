@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and design discussion
+    url: https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/discussions
+    about: Ask technical questions or propose design ideas
+  - name: Security policy
+    url: https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/security/policy
+    about: Read the security policy before privately reporting a vulnerability
