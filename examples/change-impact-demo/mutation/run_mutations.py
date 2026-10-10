@@ -12,6 +12,8 @@ import tempfile
 import xml.etree.ElementTree as ET
 
 DEMO = Path(__file__).resolve().parents[1]
+REPO = DEMO.parents[1]
+DEMO_REL = DEMO.relative_to(REPO)
 CATALOG = Path(__file__).resolve().parent / "mutants"
 TIMEOUT = 90
 
@@ -76,15 +78,15 @@ def main():
     results = []
     with tempfile.TemporaryDirectory(prefix="suhavx-mutation-") as tmp:
         base = Path(tmp) / "base"
-        shutil.copytree(DEMO, base, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "mutation-junit.xml"))
-        status, baseline_info, log = test(base)
+        shutil.copytree(REPO, base, ignore=shutil.ignore_patterns(".git", "__pycache__", ".pytest_cache", "mutation-junit.xml"))
+        status, baseline_info, log = test(base / DEMO_REL)
         if status != "SURVIVED":
             sys.exit("Baseline must pass before mutation: " + status + "\n" + log)
         expected_tests = baseline_info["tests"]
         for mutant in mutants:
             work = Path(tmp) / mutant["id"]
             shutil.copytree(base, work)
-            target = (work / mutant["file"]).resolve()
+            target = (work / DEMO_REL / mutant["file"]).resolve()
             if not target.is_relative_to(work.resolve()) or not target.is_file():
                 status, info, detail = "INVALID", {}, "Invalid target path"
             else:
@@ -98,7 +100,7 @@ def main():
                     except py_compile.PyCompileError as exc:
                         status, info, detail = "INVALID", {}, str(exc)
                     else:
-                        status, info, detail = test(work, expected_tests)
+                        status, info, detail = test(work / DEMO_REL, expected_tests)
             results.append({"id": mutant["id"], "rule": mutant["rule"],
                             "expected": mutant["expected"], "status": status,
                             "killers": info.get("assertion_failures", []), "assertion_failures": info.get("assertion_failures", []),
