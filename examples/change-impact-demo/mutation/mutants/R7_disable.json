@@ -1,0 +1,10 @@
+{
+  "id": "R7_disable",
+  "rule": "R7",
+  "file": "src/camera_evidence.py",
+  "old": "elif case.requirement_scope - e.tested_scope:",
+  "new": "elif False and (case.requirement_scope - e.tested_scope):",
+  "desc": "Disable scope-gap gate",
+  "expected": "KILLED",
+  "rationale": "Non-equivalent scope-coverage mutation; existing scenario and exhaustive tests should reject it."
+}

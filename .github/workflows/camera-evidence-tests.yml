@@ -1,0 +1,43 @@
+name: Synthetic Camera Evidence Tests
+
+on:
+  pull_request:
+    paths:
+      - "examples/change-impact-demo/**"
+      - "case-studies/01-uav-eo-camera-decision-architecture.md"
+      - ".github/workflows/camera-evidence-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  camera-evidence:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pytest
+        run: python -m pip install pytest==8.3.5
+      - name: Check for clock-dependent dates
+        run: |
+          if grep -R -n -E 'datetime\.now\(|date\.today\(' examples/change-impact-demo/src/camera_evidence.py examples/change-impact-demo/data/generate_camera_cases.py; then
+            echo "Clock-dependent code is forbidden in the synthetic fixture."
+            exit 1
+          fi
+      - name: Generate deterministic synthetic dataset
+        run: python examples/change-impact-demo/data/generate_camera_cases.py
+      - name: Run tests and preserve raw output
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pytest -v examples/change-impact-demo/tests | tee pytest-v-raw.log
+      - name: Upload raw pytest log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: camera-evidence-pytest-raw
+          path: pytest-v-raw.log
+          if-no-files-found: warn

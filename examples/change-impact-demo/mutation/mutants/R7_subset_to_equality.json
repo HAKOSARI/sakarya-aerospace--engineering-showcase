@@ -1,0 +1,10 @@
+{
+  "id": "R7_subset_to_equality",
+  "rule": "R7",
+  "file": "src/camera_evidence.py",
+  "old": "elif case.requirement_scope - e.tested_scope:",
+  "new": "elif case.requirement_scope != e.tested_scope:",
+  "desc": "Mistake extra tested scope for missing coverage",
+  "expected": "KILLED",
+  "rationale": "Non-equivalent scope-coverage mutation; existing scenario and exhaustive tests should reject it."
+}

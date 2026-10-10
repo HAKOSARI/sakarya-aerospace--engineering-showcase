@@ -1,0 +1,10 @@
+{
+  "id": "R6_wrong_label",
+  "rule": "R6",
+  "file": "src/camera_evidence.py",
+  "old": "outcome, rule, why = \"REUSE\", \"R6\",",
+  "new": "outcome, rule, why = \"REVIEW\", \"R6\",",
+  "desc": "Alter reuse recommendation",
+  "expected": "KILLED",
+  "rationale": "Core non-equivalent behavior mutation; test suite should reject it."
+}

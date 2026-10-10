@@ -1,0 +1,10 @@
+{
+  "id": "R2_disable",
+  "rule": "R2",
+  "file": "src/camera_evidence.py",
+  "old": "elif case.dependencies & baseline.changed_items:",
+  "new": "elif False and (case.dependencies & baseline.changed_items):",
+  "desc": "Disable changed dependency rule",
+  "expected": "KILLED",
+  "rationale": "Core non-equivalent behavior mutation; test suite should reject it."
+}

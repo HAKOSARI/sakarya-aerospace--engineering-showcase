@@ -1,0 +1,10 @@
+{
+  "id": "R7_wrong_label",
+  "rule": "R7",
+  "file": "src/camera_evidence.py",
+  "old": "outcome, rule, why = \"REVERIFY\", \"R7\", f\"Evidence scope does not cover required subsystems: {missing}\"",
+  "new": "outcome, rule, why = \"REVERIFY\", \"R6\", f\"Evidence scope does not cover required subsystems: {missing}\"",
+  "desc": "Mislabel uncovered scope as R6",
+  "expected": "KILLED",
+  "rationale": "Non-equivalent scope-coverage mutation; existing scenario and exhaustive tests should reject it."
+}
