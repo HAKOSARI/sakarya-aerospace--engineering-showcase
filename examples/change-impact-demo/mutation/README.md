@@ -20,3 +20,7 @@ Classification is conservative: `KILLED` requires a test assertion failure; `CRA
 ## GitHub Actions
 
 The experimental workflow `.github/workflows/mutation-experiment.yml` runs on relevant pull requests and preserves raw JSON/console logs as artifacts even when expected outcomes do not match. It is **not a required branch-protection check**. Review JSON mutants as executable code before approving outside contributions. The workflow uses read-only permissions and no secrets. A red job may indicate a surviving mutant, a crash, or an infrastructure problem; inspect the artifact before drawing conclusions.
+
+## First observed execution
+
+GitHub Actions run [38041864370](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38041864370) completed with an expected red result: 6 mutants killed (including canary) and 1 survived (`R4_drop_config_hash`). Raw artifact: [mutation-results-raw](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/actions/runs/38041864370/artifacts/11666247060), ZIP SHA-256 `da80dddadfcc75d00f2e60c1d9ed0adf796f415a94872a48cc375887c701d2c8`. A focused R4 test was subsequently added; its effect on mutation results must be verified in a later run. This is not a complete mutation campaign.
