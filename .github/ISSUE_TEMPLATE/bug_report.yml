@@ -1,0 +1,24 @@
+name: Bug report
+description: Report reproducible behavior in synthetic public demos
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Only synthetic/public information. Never disclose private laboratory data or credentials. See SECURITY.md for vulnerabilities."
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem and reproduction steps
+      description: Describe steps using fabricated data
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Tests and limitations

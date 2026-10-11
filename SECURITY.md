@@ -1,16 +1,11 @@
 # Security and Public-Repository Boundary
 
-This repository is intentionally public.
+This repository is public. Never submit credentials, tokens, keys, passwords, customer or supplier confidential information, export-controlled or classified material, proprietary internal R&D, non-public test evidence, or private personal data.
 
-Please do **not** commit or submit:
+All examples must be synthetic or explicitly authorized public information. A contribution crossing the public/private boundary must be withheld from merge.
 
-- credentials, tokens, keys or passwords;
-- customer or supplier confidential information;
-- export-controlled, classified or otherwise controlled technical data;
-- proprietary internal R&D source artifacts;
-- non-public test evidence;
-- personal data not intended for publication.
+## Vulnerability reporting
 
-Examples in this repository should use synthetic or explicitly public information and must clearly state their evidence class and limitations.
+**Do not open a public Issue or Discussion containing vulnerabilities, secrets, exploit details or sensitive information.** Use the repository Security tab's **Report a vulnerability** option if private vulnerability reporting is enabled. If not available, contact the repository owner through an established private channel without publishing the details.
 
-If a contribution appears to cross the public/private boundary, it should be withheld from merge until reviewed.
+Maintainers will assess severity and coordinate remediation where appropriate; no response-time guarantee is made. This educational demonstrator is not a certified security product.

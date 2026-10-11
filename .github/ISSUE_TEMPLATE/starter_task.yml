@@ -1,0 +1,25 @@
+name: Beginner contribution proposal
+description: Propose a 30–90 minute synthetic documentation, test or demo improvement
+title: "[Starter] "
+body:
+  - type: markdown
+    attributes:
+      value: "Public synthetic material only. No confidential or controlled information."
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed scope and timebox
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria and validation
+    validations:
+      required: true

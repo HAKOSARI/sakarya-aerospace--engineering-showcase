@@ -23,5 +23,8 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s examples/change-impact-demo/tests -p "test_change_impact.py"
 
+      - name: Check standalone browser demo rules (Node.js, no dependencies)
+        run: node examples/change-impact-demo/web/test_demo.cjs
+
       - name: Run synthetic demonstration
         run: python examples/change-impact-demo/src/change_impact.py
