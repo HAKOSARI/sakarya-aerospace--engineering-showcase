@@ -1,6 +1,12 @@
 name: Synthetic Camera Evidence Tests
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "examples/change-impact-demo/**"
+      - "case-studies/01-uav-eo-camera-decision-architecture.md"
+      - ".github/workflows/camera-evidence-tests.yml"
   pull_request:
     paths:
       - "examples/change-impact-demo/**"
