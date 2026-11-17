@@ -2,7 +2,6 @@
 import sys
 from dataclasses import replace
 from datetime import timedelta
-from itertools import combinations
 from pathlib import Path
 
 import pytest
@@ -15,7 +14,7 @@ from generate_camera_cases import generate  # noqa: E402
 from test_camera_evidence import build  # noqa: E402
 
 EO, IR, GIMBAL, LASER = "EO_CAMERA", "IR_CAMERA", "GIMBAL", "LASER_RANGEFINDER"
-VOCAB = (EO, IR, GIMBAL, LASER)
+VOCAB = (EO, IR, GIMBAL, LASER, "MISSION_COMPUTER")
 def fs(*items):
     return frozenset(items)
 
@@ -82,13 +81,16 @@ def test_s09_no_union_across_records():
     joint = make_case(fs(EO, IR), fs(EO, IR), req_id="REQ-S09", evidence_id="EV-S09-C")
     assert result_of(joint) == ("REUSE", "R6")
 
-SUBSETS = [fs(*c) for r in range(1, len(VOCAB) + 1) for c in combinations(VOCAB, r)]
-
-def test_all_225_nonempty_scope_pairs():
-    for requirement_scope in SUBSETS:
-        for tested_scope in SUBSETS:
-            expected = ("REUSE", "R6") if requirement_scope <= tested_scope else ("REVERIFY", "R7")
-            assert result_of(make_case(requirement_scope, tested_scope)) == expected
+def test_all_961_nonempty_scope_pairs():
+    # Use explicit bit masks as the oracle, separate from the engine's set subtraction.
+    for required in range(1, 1 << len(VOCAB)):
+        for tested in range(1, 1 << len(VOCAB)):
+            requirement_scope = fs(*(name for i, name in enumerate(VOCAB) if required & (1 << i)))
+            tested_scope = fs(*(name for i, name in enumerate(VOCAB) if tested & (1 << i)))
+            expected = ("REUSE", "R6") if required & tested == required else ("REVERIFY", "R7")
+            decision = recommend(make_case(requirement_scope, tested_scope), BASELINE)
+            assert (decision.outcome, decision.rule_id) == expected, (required, tested)
+            assert decision.accepted is False
 
 def test_template_is_reuse_candidate():
     assert result_of(TEMPLATE) == ("REUSE", "R6")

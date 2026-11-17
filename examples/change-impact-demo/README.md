@@ -70,6 +70,16 @@ These are not contradictory results from one engine: they are **different polici
 
 R7 is evaluated after R5 and before R6. Scope fields are declared per evidence record, never unioned across records. Missing, empty or unknown scope IDs route to R4 REVIEW. Declared scope is not independently verified test coverage; all recommendations remain advisory. See `tests/test_scope_evidence.py` for synthetic scenario targets.
 
+Evidence ID, test ID, interface version and configuration hash are missing when
+they are `None`, empty or whitespace-only (including tabs and nonbreaking spaces).
+Missing target-baseline version/hash fields also route to R4. R3 requires two
+nonblank values for the compared field; missing data alone is not a known
+mismatch. Existing priority remains R1, R2, R3, R4, R5, R7, R6: a separate known
+mismatch can still select R3 even when another field is missing. Nonblank
+version/hash values are compared exactly, without trimming or normalization.
+The scope regression checks all 961 nonempty pairs across the five supported
+subsystems in one pytest test; these pairs are not 961 separate tests.
+
 The 365-day evidence-age window is an **invented educational policy**, not an aviation standard. The `human_approval` flag is recorded but is **not** an authorized sign-off: the advisory engine **never accepts** a requirement. It does not execute engineering tests, validate provenance signatures, verify a real configuration hash, manage anomalies, or grant airworthiness approval.
 
 Run locally from `examples/change-impact-demo`:

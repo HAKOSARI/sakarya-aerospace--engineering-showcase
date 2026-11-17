@@ -57,14 +57,19 @@ class Recommendation:
 RULE_IDS = frozenset({"R1", "R2", "R3", "R4", "R5", "R6", "R7"})
 
 
+def _has_text(value: str | None) -> bool:
+    """Check presence only; never normalize a nonblank version or hash."""
+    return isinstance(value, str) and bool(value.strip())
+
+
 def recommend(case: RequirementCase, baseline: ChangeBaseline) -> Recommendation:
     """Return a provisional per-requirement disposition, never an acceptance.
 
     Priority:
       R1: failed/inconclusive evidence -> REVIEW and anomaly handling
       R2: known changed dependency -> REVERIFY
-      R3: known interface/config mismatch -> REVERIFY
-      R4: missing provenance or date -> REVIEW
+      R3: known nonblank interface/config mismatch -> REVERIFY
+      R4: missing provenance, target version/config or date -> REVIEW
       R5: stale/future evidence -> REVIEW
       R7: uncovered requirement scope -> REVERIFY
       R6: matching PASS evidence -> REUSE candidate (not acceptance)
@@ -76,14 +81,19 @@ def recommend(case: RequirementCase, baseline: ChangeBaseline) -> Recommendation
         outcome, rule, why = "REVIEW", "R1", "Failed or inconclusive evidence; investigate anomaly or gap"
     elif case.dependencies & baseline.changed_items:
         outcome, rule, why = "REVERIFY", "R2", "Changed traced requirement dependency"
-    elif (e.interface_version is not None and e.interface_version != baseline.interface_version) or (
-        e.config_hash is not None and e.config_hash != baseline.config_hash
+    elif (_has_text(e.interface_version) and _has_text(baseline.interface_version)
+          and e.interface_version != baseline.interface_version) or (
+        _has_text(e.config_hash) and _has_text(baseline.config_hash)
+        and e.config_hash != baseline.config_hash
     ):
         outcome, rule, why = "REVERIFY", "R3", "Evidence interface or configuration differs from target baseline"
-    elif (not e.evidence_id or not e.test_id or not e.interface_version or not e.config_hash or e.date is None
+    elif (not _has_text(e.evidence_id) or not _has_text(e.test_id)
+          or not _has_text(e.interface_version) or not _has_text(e.config_hash)
+          or not _has_text(baseline.interface_version) or not _has_text(baseline.config_hash)
+          or e.date is None
           or not case.requirement_scope or not e.tested_scope
           or not case.requirement_scope <= SUBSYSTEM_IDS or not e.tested_scope <= SUBSYSTEM_IDS):
-        outcome, rule, why = "REVIEW", "R4", "Incomplete evidence identity, version, configuration, date or scope"
+        outcome, rule, why = "REVIEW", "R4", "Incomplete evidence identity, version, configuration, date, scope or target baseline"
     elif e.date > baseline.evaluation_date or (baseline.evaluation_date - e.date).days > baseline.max_evidence_age_days:
         outcome, rule, why = "REVIEW", "R5", "Evidence date outside synthetic applicability window"
     elif case.requirement_scope - e.tested_scope:
