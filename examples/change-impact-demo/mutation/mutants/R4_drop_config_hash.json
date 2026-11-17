@@ -2,7 +2,7 @@
   "id": "R4_drop_config_hash",
   "rule": "R4",
   "file": "src/camera_evidence.py",
-  "old": "or not e.config_hash",
+  "old": "or not _has_text(e.config_hash)",
   "new": "or False",
   "desc": "Ignore missing configuration hash without changing date handling",
   "expected": "KILLED",
