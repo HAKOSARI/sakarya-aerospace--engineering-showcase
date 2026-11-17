@@ -6,6 +6,8 @@ from dataclasses import replace
 from datetime import date
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "data"))
@@ -150,4 +152,72 @@ def test_missing_config_hash_requires_review_even_with_other_evidence_valid():
     )
     assert decision.outcome == "REVIEW"
     assert decision.rule_id == "R4"
+    assert decision.accepted is False
+
+
+BLANK_TEXT = [
+    pytest.param(None, id="none"),
+    pytest.param("", id="empty"),
+    pytest.param("   ", id="spaces"),
+    pytest.param("\t\n", id="tabs-newline"),
+    pytest.param("\u00a0", id="nonbreaking-space"),
+]
+
+
+@pytest.mark.parametrize("field", ["evidence_id", "test_id", "interface_version", "config_hash"])
+@pytest.mark.parametrize("value", BLANK_TEXT)
+def test_blank_provenance_requires_review(field, value):
+    baseline, cases = build(generate())
+    case = replace(cases[0], dependencies=frozenset(),
+                   evidence=replace(cases[0].evidence, **{field: value}))
+    decision = recommend(case, baseline)
+    assert (decision.outcome, decision.rule_id) == ("REVIEW", "R4")
+    assert decision.accepted is False
+
+
+@pytest.mark.parametrize("field", ["interface_version", "config_hash"])
+@pytest.mark.parametrize("value", BLANK_TEXT)
+def test_blank_target_baseline_requires_review(field, value):
+    baseline, cases = build(generate())
+    decision = recommend(cases[0], replace(baseline, **{field: value}))
+    assert (decision.outcome, decision.rule_id) == ("REVIEW", "R4")
+    assert decision.accepted is False
+
+
+@pytest.mark.parametrize("field", ["interface_version", "config_hash"])
+def test_matching_blank_evidence_and_baseline_are_not_reusable(field):
+    baseline, cases = build(generate())
+    case = replace(cases[0], evidence=replace(cases[0].evidence, **{field: "   "}))
+    decision = recommend(case, replace(baseline, **{field: "   "}))
+    assert (decision.outcome, decision.rule_id) == ("REVIEW", "R4")
+    assert decision.accepted is False
+
+
+@pytest.mark.parametrize("field", ["interface_version", "config_hash"])
+@pytest.mark.parametrize("padded", [False, True], ids=["different", "padded"])
+def test_nonblank_mismatch_is_not_normalized_into_a_match(field, padded):
+    baseline, cases = build(generate())
+    original = getattr(cases[0].evidence, field)
+    value = f" {original} " if padded else "KNOWN-DIFFERENT"
+    case = replace(cases[0], evidence=replace(cases[0].evidence, **{field: value}))
+    decision = recommend(case, baseline)
+    assert (decision.outcome, decision.rule_id) == ("REVERIFY", "R3")
+    assert decision.accepted is False
+
+
+@pytest.mark.parametrize("evidence_changes,changed,expected", [
+    pytest.param({"result": "FAIL", "evidence_id": "   "}, True, ("REVIEW", "R1"), id="failed-first"),
+    pytest.param({"result": "INCONCLUSIVE", "config_hash": ""}, True, ("REVIEW", "R1"), id="inconclusive-first"),
+    pytest.param({"interface_version": ""}, True, ("REVERIFY", "R2"), id="changed-dependency-first"),
+    pytest.param({"interface_version": "", "config_hash": "KNOWN-DIFFERENT"}, False, ("REVERIFY", "R3"), id="known-config-mismatch"),
+    pytest.param({"interface_version": "KNOWN-DIFFERENT", "config_hash": ""}, False, ("REVERIFY", "R3"), id="known-interface-mismatch"),
+])
+def test_missing_text_preserves_higher_priority_decisions(evidence_changes, changed, expected):
+    baseline, cases = build(generate())
+    dependency = frozenset({"DEPENDENCY-X"})
+    case = replace(cases[0], dependencies=dependency,
+                   evidence=replace(cases[0].evidence, **evidence_changes))
+    baseline = replace(baseline, changed_items=dependency if changed else frozenset())
+    decision = recommend(case, baseline)
+    assert (decision.outcome, decision.rule_id) == expected
     assert decision.accepted is False

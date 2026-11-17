@@ -40,10 +40,29 @@ jobs:
         run: |
           set -o pipefail
           python -m pytest -v examples/change-impact-demo/tests | tee pytest-v-raw.log
+      - name: Run pinned-source diagnostic and negative control
+        shell: bash
+        run: |
+          set -euo pipefail
+          commit=$(git rev-parse HEAD)
+          digest=$(sha256sum examples/change-impact-demo/src/camera_evidence.py | cut -d ' ' -f1)
+          python examples/change-impact-demo/diagnostics/run_diagnostic.py \
+            --source-commit "$commit" --source-sha256 "$digest" --output diagnostic.json
+          set +e
+          python examples/change-impact-demo/diagnostics/run_diagnostic.py \
+            --source-commit "$commit" --source-sha256 "$digest" \
+            --inject-oracle-failure --output diagnostic-negative.json
+          code=$?
+          set -e
+          test "$code" -eq 1
+          python -c 'import json; r=json.load(open("diagnostic-negative.json")); assert r["all_pass"] is False and r["mismatch_count"] == 1 and "error" not in r'
       - name: Upload raw pytest log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: camera-evidence-pytest-raw
-          path: pytest-v-raw.log
+          path: |
+            pytest-v-raw.log
+            diagnostic.json
+            diagnostic-negative.json
           if-no-files-found: warn
