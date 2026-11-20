@@ -1,5 +1,7 @@
 # Public Engineering Showcase — Roadmap
 
+> **Document status note — 2026-11-13:** The roadmap below is retained as a historical planning snapshot. Its draft/availability labels are stale and must not be read as current repository status. Consult the current [README](README.md) and GitHub pull-request metadata for published document status. [PR #13](https://github.com/HAKOSARI/sakarya-aerospace--engineering-showcase/pull/13) was merged on 2026-10-11 at 14:21:44 UTC, despite the historical “DRAFT” word in its title. This note changes document-status metadata only; it does not revise technical plans, validate results, or authorize implementation or merging.
+
 **Status:** Community-facing proposals and demonstrators, not an approved aerospace verification programme.
 
 ## Mission
